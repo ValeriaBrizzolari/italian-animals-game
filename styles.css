@@ -83,7 +83,44 @@ body {
     );
   filter: blur(0.2px);
 }
+.start-button {
+  display: block;
+  margin: 12px auto 18px;
+  padding: 12px 28px;
 
+  font-family: "Fredoka", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+
+  background: linear-gradient(
+    180deg,
+    var(--orange) 0%,
+    var(--orange-deep) 100%
+  );
+  border: 3px solid rgba(22, 50, 74, 0.18);
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+
+  cursor: pointer;
+  transition:
+    transform 0.1s ease,
+    filter 0.1s ease;
+}
+
+.start-button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.start-button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.start-button:focus-visible {
+  outline: 4px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+}
 .app {
   max-width: 980px;
   margin: 0 auto;

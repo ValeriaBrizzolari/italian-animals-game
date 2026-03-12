@@ -15,10 +15,13 @@ let currentRightAnimal;
 let buttons = document.querySelectorAll(".choice");
 let clickedAnimal;
 const title = document.querySelector("#prompt-word");
-document.addEventListener("keydown", function () {
+const startButton = document.querySelector("#start-button");
+const resultText = document.querySelector("#result-text");
+startButton.addEventListener("click", function () {
   if (!started) {
     started = true;
     level = 0;
+    startButton.style.display = "none";
     nextRound();
   }
 });
@@ -82,50 +85,54 @@ function wrongAnimals(name) {
 }
 
 function startOver() {
-  document.querySelector("#result-text").innerText = "";
-  title.innerText = "Premi un tasto per iniziare ";
+  resultText.innerText = "";
+  title.innerText = "Premi START per iniziare ";
   started = false;
   level = 0;
+  document.querySelector("#level-value").innerText = level;
+  startButton.style.display = "block";
   currentChoices = [];
 }
 
 for (let i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener("click", function () {
-    let clickedButton = this;
-    clickedAnimal = this.dataset.animal;
-    if (clickedAnimal === currentRightAnimal) {
-      document.querySelector("#result-text").innerText = "Esatto!";
-      clickedButton.classList.add("correct");
-      setTimeout(function () {
-        clickedButton.classList.remove("correct");
-      }, 800);
-      if (level === animals.length - 1) {
-        title.innerText = "Bravo, hai vinto!";
-        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-        confetti({ particleCount: 120, spread: 70, origin: { x: 0.2 } });
-        confetti({ particleCount: 120, spread: 70, origin: { x: 0.8 } });
-        document.querySelector("#result-text").innerText = "";
+    if (started) {
+      let clickedButton = this;
+      clickedAnimal = this.dataset.animal;
+      if (clickedAnimal === currentRightAnimal) {
+        resultText.innerText = "Esatto!";
+        clickedButton.classList.add("correct");
+        setTimeout(function () {
+          clickedButton.classList.remove("correct");
+        }, 800);
+        if (level === animals.length - 1) {
+          title.innerText = "Bravo, hai vinto!";
+          confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+          confetti({ particleCount: 120, spread: 70, origin: { x: 0.2 } });
+          confetti({ particleCount: 120, spread: 70, origin: { x: 0.8 } });
+          resultText.innerText = "";
+          setTimeout(function () {
+            startOver();
+          }, 3000);
+          return;
+        }
+        level++;
+        setTimeout(function () {
+          resultText.innerText = "";
+          nextRound();
+        }, 800);
+      } else {
+        resultText.innerText = "OOPPPSS, sbagliato!";
+        clickedButton.classList.add("wrong");
+        document.querySelector(".app").classList.add("game-over");
+        setTimeout(function () {
+          clickedButton.classList.remove("wrong");
+          document.querySelector(".app").classList.remove("game-over");
+        }, 800);
         setTimeout(function () {
           startOver();
-        }, 3000);
-        return;
+        }, 1000);
       }
-      level++;
-      setTimeout(function () {
-        document.querySelector("#result-text").innerText = "";
-        nextRound();
-      }, 800);
-    } else {
-      document.querySelector("#result-text").innerText = "OOPPPSS, sbagliato!";
-      clickedButton.classList.add("wrong");
-      document.querySelector(".app").classList.add("game-over");
-      setTimeout(function () {
-        clickedButton.classList.remove("wrong");
-        document.querySelector(".app").classList.remove("game-over");
-      }, 800);
-      setTimeout(function () {
-        startOver();
-      }, 1000);
     }
   });
 }
