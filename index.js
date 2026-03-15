@@ -1,46 +1,107 @@
 let animals = [
-  { name: "cane", image: "cane.png" },
-  { name: "gatto", image: "gatto.png" },
-  { name: "coniglio", image: "coniglio.png" },
-  { name: "cavallo", image: "cavallo.png" },
-  { name: "maiale", image: "maiale.png" },
-  { name: "mucca", image: "mucca.png" },
-  { name: "pecora", image: "pecora.png" },
-  { name: "papera", image: "papera.png" },
+  { translations: { it: "cane", en: "dog" }, image: "dog.png" },
+  { translations: { it: "gatto", en: "cat" }, image: "cat.png" },
+  { translations: { it: "coniglio", en: "rabbit" }, image: "rabbit.png" },
+  { translations: { it: "cavallo", en: "horse" }, image: "horse.png" },
+  { translations: { it: "maiale", en: "pig" }, image: "pig.png" },
+  { translations: { it: "mucca", en: "cow" }, image: "cow.png" },
+  { translations: { it: "pecora", en: "sheep" }, image: "sheep.png" },
+  { translations: { it: "papera", en: "duck" }, image: "duck.png" },
+  { translations: { it: "capra", en: "goat" }, image: "goat.png" },
+  { translations: { it: "gallina", en: "chicken" }, image: "chicken.png" },
+  { translations: { it: "rana", en: "frog" }, image: "frog.png" },
+  { translations: { it: "topo", en: "mouse" }, image: "mouse.png" },
+  { translations: { it: "tigre", en: "tiger" }, image: "tiger.png" },
+  { translations: { it: "cervo", en: "deer" }, image: "deer.png" },
+  {
+    translations: { it: "coccodrillo", en: "crocodile" },
+    image: "crocodile.png",
+  },
+  { translations: { it: "cigno", en: "swan" }, image: "swan.png" },
+  { translations: { it: "formica", en: "ant" }, image: "ant.png" },
+  { translations: { it: "grillo", en: "cricket" }, image: "cricket.png" },
+  { translations: { it: "coccinella", en: "ladybug" }, image: "ladybug.png" },
+  { translations: { it: "farfalla", en: "butterfly" }, image: "butterfly.png" },
+  { translations: { it: "uccello", en: "bird" }, image: "bird.png" },
+  { translations: { it: "leone", en: "lion" }, image: "lion.png" },
+  { translations: { it: "giraffa", en: "giraffe" }, image: "giraffe.png" },
+  { translations: { it: "granchio", en: "crab" }, image: "crab.png" },
 ];
 let started = false;
 let level = 0;
+let mode = "it";
+let interfaceLanguage = "en";
+let gameAnimals = [];
 let currentChoices = [];
-let currentRightAnimal;
+let correctAnswer;
 let buttons = document.querySelectorAll(".choice");
 let clickedAnimal;
-const title = document.querySelector("#prompt-word");
+const promptWord = document.querySelector("#prompt-word");
 const startButton = document.querySelector("#start-button");
 const resultText = document.querySelector("#result-text");
+const siteTitle = document.querySelector(".site-title");
+const hintText = document.querySelector("#hint-text");
+const levelLabel = document.querySelector(".pill-label");
+const languageToggle = document.querySelector("#language-toggle");
+let levelValue = document.querySelector("#level-value");
+
+function t(en, it) {
+  if (interfaceLanguage === "en") {
+    return en;
+  } else {
+    return it;
+  }
+}
+function updateInterface() {
+  hintText.innerText = t("Click the right animal", "Clicca l'animale giusto");
+  siteTitle.innerText = t("ANIMALS", "ANIMALI");
+  levelLabel.innerText = t("Level", "Livello");
+  if (!started) {
+    promptWord.innerText = t("PRESS START", "PREMI START");
+  }
+}
+
+languageToggle.addEventListener("click", function () {
+  if (mode === "it") {
+    mode = "en";
+    interfaceLanguage = "it";
+  } else {
+    mode = "it";
+    interfaceLanguage = "en";
+  }
+  languageToggle.classList.toggle("en");
+  updateInterface();
+  if (started) {
+    startOver();
+  }
+});
+
 startButton.addEventListener("click", function () {
   if (!started) {
     started = true;
     level = 0;
     startButton.style.display = "none";
+    gameAnimals = [...animals];
+    shuffle(gameAnimals);
     nextRound();
   }
 });
 
 function nextRound() {
   currentChoices = [];
-  currentRightAnimal = animals[level].name;
-  title.innerText = currentRightAnimal;
-  currentChoices.push(currentRightAnimal);
-  wrongAnimals(currentRightAnimal);
+  correctAnswer = gameAnimals[level];
+  promptWord.innerText = correctAnswer.translations[mode];
+  currentChoices.push(correctAnswer);
+  wrongAnimals(correctAnswer);
   shuffle(currentChoices);
-  displayedImages();
-  document.querySelector("#level-value").innerText = level + 1;
+  displayChoices();
+  levelValue.innerText = level + 1;
 }
-function displayedImages() {
+function displayChoices() {
   let images = document.querySelectorAll(".choice img");
   for (let i = 0; i < currentChoices.length; i++) {
-    images[i].setAttribute("src", "images/" + currentChoices[i] + ".png");
-    buttons[i].dataset.animal = currentChoices[i];
+    images[i].setAttribute("src", "images/" + currentChoices[i].image);
+    buttons[i].dataset.animal = currentChoices[i].image;
   }
 }
 function shuffle(array) {
@@ -51,47 +112,47 @@ function shuffle(array) {
   return array;
 }
 
-function wrongAnimals(name) {
+function wrongAnimals(object) {
   let firstWrongAnimalIndex = Math.floor(Math.random() * animals.length);
   let secondWrongAnimalIndex = Math.floor(Math.random() * animals.length);
 
   while (
-    animals[firstWrongAnimalIndex].name ===
-      animals[secondWrongAnimalIndex].name ||
-    animals[firstWrongAnimalIndex].name === name ||
-    animals[secondWrongAnimalIndex].name === name
+    animals[firstWrongAnimalIndex] === animals[secondWrongAnimalIndex] ||
+    animals[firstWrongAnimalIndex] === object ||
+    animals[secondWrongAnimalIndex] === object
   ) {
-    while (name === animals[firstWrongAnimalIndex].name) {
+    while (object === animals[firstWrongAnimalIndex]) {
       let randomNumber1 = Math.floor(Math.random() * animals.length);
       firstWrongAnimalIndex = randomNumber1;
     }
-    while (name === animals[secondWrongAnimalIndex].name) {
+    while (object === animals[secondWrongAnimalIndex]) {
       let randomNumber2 = Math.floor(Math.random() * animals.length);
       secondWrongAnimalIndex = randomNumber2;
     }
 
     while (
       firstWrongAnimalIndex === secondWrongAnimalIndex ||
-      animals[firstWrongAnimalIndex].name === name
+      animals[firstWrongAnimalIndex] === object
     ) {
       let randomNumber = Math.floor(Math.random() * animals.length);
       firstWrongAnimalIndex = randomNumber;
     }
   }
   currentChoices.push(
-    animals[firstWrongAnimalIndex].name,
-    animals[secondWrongAnimalIndex].name,
+    animals[firstWrongAnimalIndex],
+    animals[secondWrongAnimalIndex],
   );
 }
 
 function startOver() {
   resultText.innerText = "";
-  title.innerText = "Premi START per iniziare ";
   started = false;
   level = 0;
-  document.querySelector("#level-value").innerText = level;
+  levelValue.innerText = 0;
   startButton.style.display = "block";
   currentChoices = [];
+  gameAnimals = [];
+  updateInterface();
 }
 
 for (let i = 0; i < buttons.length; i++) {
@@ -99,14 +160,14 @@ for (let i = 0; i < buttons.length; i++) {
     if (started) {
       let clickedButton = this;
       clickedAnimal = this.dataset.animal;
-      if (clickedAnimal === currentRightAnimal) {
-        resultText.innerText = "Esatto!";
+      if (clickedAnimal === correctAnswer.image) {
+        resultText.innerText = t("Correct!", "Esatto!");
         clickedButton.classList.add("correct");
         setTimeout(function () {
           clickedButton.classList.remove("correct");
         }, 800);
-        if (level === animals.length - 1) {
-          title.innerText = "Bravo, hai vinto!";
+        if (level === gameAnimals.length - 1) {
+          promptWord.innerText = t("Well done, you won!", "Bravo, hai vinto!");
           confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
           confetti({ particleCount: 120, spread: 70, origin: { x: 0.2 } });
           confetti({ particleCount: 120, spread: 70, origin: { x: 0.8 } });
@@ -122,7 +183,10 @@ for (let i = 0; i < buttons.length; i++) {
           nextRound();
         }, 800);
       } else {
-        resultText.innerText = "OOPPPSS, sbagliato!";
+        resultText.innerText = t(
+          "OOPPPSS, wrong answer!",
+          "OOPPPSS, sbagliato!",
+        );
         clickedButton.classList.add("wrong");
         document.querySelector(".app").classList.add("game-over");
         setTimeout(function () {

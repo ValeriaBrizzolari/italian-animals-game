@@ -21,10 +21,24 @@
     <main class="app">
       <header class="top">
         <div class="site-header">
-          <div class="logo">🐾</div>
-          <p class="site-title">Italiano per bimbi</p>
-        </div>
+          <div class="site-left">
+            <div class="logo">🐾</div>
+            <p class="site-title">ANIMALS</p>
+          </div>
+          <div id="language-toggle" class="language-toggle">
+            <div class="toggle-slider"></div>
 
+            <div class="toggle-option option-it">
+              <img src="https://flagcdn.com/w20/it.png" class="flag" />
+              <span>Italiano</span>
+            </div>
+
+            <div class="toggle-option option-en">
+              <span>English</span>
+              <img src="https://flagcdn.com/w20/gb.png" class="flag" />
+            </div>
+          </div>
+        </div>
         <div class="status">
           <div class="pill" id="level-pill">
             <span class="pill-label">Level</span>
@@ -32,26 +46,26 @@
           </div>
         </div>
 
-        <h1 id="prompt-word">Premi START per iniziare</h1>
+        <h1 id="prompt-word">Press START</h1>
       </header>
 
       <section class="card">
         <button id="start-button" class="start-button" type="button">
           START
         </button>
-        <p class="hint" id="hint-text">Clicca l’animale giusto</p>
+        <p class="hint" id="hint-text">Click the right animal</p>
 
         <div class="choices" role="list">
           <button class="choice" type="button">
-            <img src="images/gatto.png" alt="gatto" />
+            <img src="images/cat.png" alt="cat" />
           </button>
 
           <button class="choice" type="button">
-            <img src="images/cane.png" alt="cane" />
+            <img src="images/dog.png" alt="dog" />
           </button>
 
           <button class="choice" type="button">
-            <img src="images/coniglio.png" alt="coniglio" />
+            <img src="images/rabbit.png" alt="rabbit" />
           </button>
         </div>
 
