@@ -101,6 +101,7 @@ function displayChoices() {
   let images = document.querySelectorAll(".choice img");
   for (let i = 0; i < currentChoices.length; i++) {
     images[i].setAttribute("src", "images/" + currentChoices[i].image);
+    images[i].setAttribute("alt", currentChoices[i].translations.en);
     buttons[i].dataset.animal = currentChoices[i].image;
   }
 }
