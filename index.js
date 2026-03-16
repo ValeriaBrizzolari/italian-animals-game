@@ -44,6 +44,10 @@ const hintText = document.querySelector("#hint-text");
 const levelLabel = document.querySelector(".pill-label");
 const languageToggle = document.querySelector("#language-toggle");
 let levelValue = document.querySelector("#level-value");
+const star1 = document.querySelector("#star-1");
+const star2 = document.querySelector("#star-2");
+const star3 = document.querySelector("#star-3");
+const star4 = document.querySelector("#star-4");
 
 function t(en, it) {
   if (interfaceLanguage === "en") {
@@ -60,7 +64,25 @@ function updateInterface() {
     promptWord.innerText = t("PRESS START", "PREMI START");
   }
 }
+function updateStars(totalItems) {
+  const progress = (level + 1) / totalItems;
 
+  if (progress >= 0.25) {
+    star1.classList.add("filled");
+  }
+
+  if (progress >= 0.5) {
+    star2.classList.add("filled");
+  }
+
+  if (progress >= 0.75) {
+    star3.classList.add("filled");
+  }
+
+  if (level === totalItems) {
+    star4.classList.add("filled");
+  }
+}
 languageToggle.addEventListener("click", function () {
   if (mode === "it") {
     mode = "en";
@@ -154,6 +176,10 @@ function startOver() {
   currentChoices = [];
   gameAnimals = [];
   updateInterface();
+  star1.classList.remove("filled");
+  star2.classList.remove("filled");
+  star3.classList.remove("filled");
+  star4.classList.remove("filled");
 }
 
 for (let i = 0; i < buttons.length; i++) {
@@ -167,7 +193,9 @@ for (let i = 0; i < buttons.length; i++) {
         setTimeout(function () {
           clickedButton.classList.remove("correct");
         }, 800);
-        if (level === gameAnimals.length - 1) {
+        level++;
+        updateStars(gameAnimals.length);
+        if (level === gameAnimals.length) {
           promptWord.innerText = t("Well done, you won!", "Bravo, hai vinto!");
           confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
           confetti({ particleCount: 120, spread: 70, origin: { x: 0.2 } });
@@ -178,7 +206,7 @@ for (let i = 0; i < buttons.length; i++) {
           }, 3000);
           return;
         }
-        level++;
+
         setTimeout(function () {
           resultText.innerText = "";
           nextRound();
