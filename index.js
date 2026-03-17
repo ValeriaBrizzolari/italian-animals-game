@@ -48,6 +48,12 @@ const star1 = document.querySelector("#star-1");
 const star2 = document.querySelector("#star-2");
 const star3 = document.querySelector("#star-3");
 const star4 = document.querySelector("#star-4");
+function makeSound() {
+  let correctItemSound = new Audio(
+    "/sounds/" + correctAnswer.translations[mode] + ".mp3",
+  );
+  correctItemSound.play();
+}
 
 function t(en, it) {
   if (interfaceLanguage === "en") {
@@ -114,6 +120,7 @@ function nextRound() {
   correctAnswer = gameAnimals[level];
   promptWord.innerText = correctAnswer.translations[mode];
   currentChoices.push(correctAnswer);
+  makeSound();
   wrongAnimals(correctAnswer);
   shuffle(currentChoices);
   displayChoices();
@@ -189,6 +196,8 @@ for (let i = 0; i < buttons.length; i++) {
       clickedAnimal = this.dataset.animal;
       if (clickedAnimal === correctAnswer.image) {
         resultText.innerText = t("Correct!", "Esatto!");
+        let correctSound = new Audio("/sounds/correctAnswer.wav");
+        correctSound.play();
         clickedButton.classList.add("correct");
         setTimeout(function () {
           clickedButton.classList.remove("correct");
@@ -196,7 +205,16 @@ for (let i = 0; i < buttons.length; i++) {
         level++;
         updateStars(gameAnimals.length);
         if (level === gameAnimals.length) {
-          promptWord.innerText = t("Well done, you won!", "Bravo, hai vinto!");
+          promptWord.innerText = t("Great job, you won!", "Bravo, hai vinto!");
+          if (mode === "en") {
+            let winningGameSoundIt = new Audio("/sounds/MessaggioVincita.mp3");
+            winningGameSoundIt.play();
+          } else {
+            let winningGameSoundEn = new Audio("/sounds/WinVoiceMessage.mp3");
+            winningGameSoundEn.play();
+          }
+          let gameWonSound = new Audio("/sounds/gameWon.wav");
+          gameWonSound.play();
           confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
           confetti({ particleCount: 120, spread: 70, origin: { x: 0.2 } });
           confetti({ particleCount: 120, spread: 70, origin: { x: 0.8 } });
@@ -217,6 +235,8 @@ for (let i = 0; i < buttons.length; i++) {
           "OOPPPSS, sbagliato!",
         );
         clickedButton.classList.add("wrong");
+        let gameOverSound = new Audio("/sounds/gameOver.wav");
+        gameOverSound.play();
         document.querySelector(".app").classList.add("game-over");
         setTimeout(function () {
           clickedButton.classList.remove("wrong");
