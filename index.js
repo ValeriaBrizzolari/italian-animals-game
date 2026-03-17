@@ -71,7 +71,7 @@ function updateInterface() {
   }
 }
 function updateStars(totalItems) {
-  const progress = (level + 1) / totalItems;
+  const progress = level / totalItems;
 
   if (progress >= 0.25) {
     star1.classList.add("filled");
