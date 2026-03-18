@@ -144,6 +144,13 @@ body {
   outline-offset: 3px;
 }
 
+.game-icon img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
 .language-toggle {
   position: relative;
   display: flex;
